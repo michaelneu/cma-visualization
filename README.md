@@ -18,3 +18,42 @@ $ make clean
 ```
 
 Notebooks created on the Jupyter instance are stored in the `notebooks` folder in this repository.
+
+## TODO
+
+Instructions:
+- [x] add
+- [x] and
+- [ ] alloc
+- [ ] call
+- [x] div
+- [ ] dup
+- [ ] enter
+- [x] eq
+- [x] geq
+- [x] gr
+- [ ] halt
+- [ ] jump
+- [ ] jumpz
+- [ ] jumpi
+- [x] leq
+- [x] le
+- [ ] load
+- [ ] loada
+- [ ] loadc
+- [ ] loadr
+- [ ] loadrc
+- [ ] malloc
+- [ ] mark
+- [x] mul
+- [ ] neg
+- [ ] neq
+- [ ] new
+- [x] or
+- [ ] pop
+- [ ] return
+- [ ] slide
+- [ ] store
+- [ ] storea
+- [ ] storer
+- [x] sub

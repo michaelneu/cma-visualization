@@ -98,11 +98,16 @@ class VM:
         # TODO: value type check
         # TODO: boundary check
         self.S[self.SP+rel_idx] = value
-    
+
     def _push_S(self, value):
         self._inc()
         self._write(value)
-    
+
+    def peek(self):
+        """ Return the value on top of the stack. """
+        # TODO: boundary check
+        return self.S[self.SP]
+
     def step(self, force=False):
         if self.halted and not force:
             return
