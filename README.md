@@ -47,7 +47,7 @@ Instructions:
 - [ ] mark
 - [x] mul
 - [ ] neg
-- [ ] neq
+- [x] neq
 - [ ] new
 - [x] or
 - [ ] pop
