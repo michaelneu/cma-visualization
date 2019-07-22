@@ -4,8 +4,10 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 OP_PREFIX = "op_"
 
+
 def op_func_name(op_func):
     return op_func.__name__.split(OP_PREFIX, 1).pop().upper()
+
 
 def op(*type_casters):
     logger = logging.getLogger()
@@ -19,15 +21,21 @@ def op(*type_casters):
     return make_op
 
 
+def unary_int_op(func):
+    @op()
+    def unary_op(self):
+        x = self._read(0)
+        result = int(func(x))
+        self.logger.debug(f" <- {result} ({op_func_name(func)} {x})")
+        self._write(result, 0)
+    return unary_op
+
+
 def binary_int_op(func):
     @op()
     def binary_op(self):
         x, y = self._read(-1), self._read(0)
-        result = func(x, y)
-        if result == True:
-            result = 1
-        elif result == False:
-            result = 0
+        result = int(func(x, y))
         self.logger.debug(f" <- {result} ({op_func_name(func)} {x} {y})")
         self._write(result, -1)
         self._dec()
@@ -176,6 +184,15 @@ class VM:
     @binary_int_op
     def op_geq(x, y):
         return x >= y
+
+    @unary_int_op
+    def op_neg(x):
+        return -x
+
+    @unary_int_op
+    def op_not(x):
+        return not bool(x)
+
     
 
 vm = VM(['loadc 1', 'loadc 1', 'eq', 'halt'])

@@ -14,6 +14,18 @@ def _test_binary_op(op_name, x, y, z):
     assert vm.peek() == z
 
 
+def _test_unary_op(op_name, x, z):
+    instructions = [
+        'loadc %d' % x,
+        op_name
+    ]
+    # TODO: add additional state checks
+    vm = VM(instructions)
+    for _ in range(len(instructions)):
+        vm.step()
+    assert vm.peek() == z
+
+
 def test_instruction_halt():
     vm = VM(['halt'])
     assert not vm.halted
@@ -87,3 +99,13 @@ def test_instruction_geq():
     _test_binary_op('geq', 42, 0, 1)
     _test_binary_op('geq', 42, 42, 1)
     _test_binary_op('geq', 0, 42, 0)
+
+
+def test_instruction_neg():
+    _test_unary_op('neg', 42, -42)
+    _test_unary_op('neg', -42, 42)
+
+
+def test_instruction_not():
+    _test_unary_op('not', 0, 1)
+    _test_unary_op('not', 1, 0)

@@ -46,8 +46,9 @@ Instructions:
 - [ ] malloc
 - [ ] mark
 - [x] mul
-- [ ] neg
+- [x] neg
 - [x] neq
+- [x] not
 - [ ] new
 - [x] or
 - [ ] pop
