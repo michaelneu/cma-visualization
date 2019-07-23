@@ -196,3 +196,53 @@ def test_pop():
     for _ in range(len(instructions)):
         vm.step()
     assert vm._get_sp() == 0
+
+
+def test_jump_1():
+    # if (x > y)
+    #  x <- x - y;
+    # else
+    #  y <- y - x;
+    x_ref, y_ref = 4, 7
+
+    instructions = [
+        'loada 4',
+        'loada 7',
+        'gr',
+        'jumpz A',
+        'loada 4',
+        'loada 7',
+        'sub',
+        'storea 4',
+        'pop',
+        'jump B',
+        'A: loada 7',
+        'loada 4',
+        'sub',
+        'storea 7',
+        'pop',
+        'B:'
+    ]
+
+    x_val, y_val = 4, 3
+    vm = VM(instructions)
+    assert vm._get_sp() == 0
+    vm._write(x_val, x_ref)
+    vm._write(y_val, y_ref)
+    while not vm.halted:
+        vm.step()
+    x, y = x_val, y_val
+    x_val = vm._read(x_ref)
+    assert x_val == x - y  # 4 > 3 => x = x - y
+
+    x_val, y_val = 3, 4
+    vm = VM(instructions)
+    assert vm._get_sp() == 0
+    vm._write(x_val, x_ref)
+    vm._write(y_val, y_ref)
+    while not vm.halted:
+        vm.step()
+    x, y = x_val, y_val
+    y_val = vm._read(y_ref)
+    assert y_val == y - x  # !(4 > 3) => y = y - x
+

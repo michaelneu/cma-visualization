@@ -15,7 +15,7 @@ def op(*type_casters):
         #logger.debug("op {} with {} arguments".format(func.__name__, len(type_casters)))
         def call_op(self, *args):
             # TODO: check number of arguments
-            cast_args = [c(v) for c,v in zip(type_casters, args)]
+            cast_args = [c(self, v) for c,v in zip(type_casters, args)]
             return func(self, *cast_args)
         return call_op
     return make_op
@@ -49,8 +49,16 @@ def binary_bool_op(func):
     return binary_op
 
 
-def constant(value):
+def constant(self, value):
     # TODO: type check
+    return int(value)
+
+
+def address(self, value):
+    # TODO: type check / check if label exists
+    label_val = str(value).lower()
+    if label_val in self.labels:
+        return self.labels[label_val]
     return int(value)
 
 
@@ -65,24 +73,35 @@ class instruction:
         getattr(vm, OP_PREFIX + self.name)(*self.args)
 
         
-def parse_instruction(args):
+def parse_instruction(args, idx, labels):
     if isinstance(args, instruction):
         return args
     
     if isinstance(args, str):
         args = args.split(' ')
-    
+
     args = [arg.lower() for arg in args]
     # TODO: boundary check (min 1 element in args)
-    
+
+    if args[0].endswith(':'):
+        label = args[0][:-1]
+        if label in labels:
+            raise Exception("Label used multiple times: " + label)
+        labels[label] = idx
+        args = args[1:]
+
+    if len(args) == 0:
+        args = ['halt']
+
     return instruction(args[0], args[1:])
 
 
 class VM:
     def __init__(self, C, memory_size=1024):
         self.logger = logging.getLogger()
-        
-        self.C = [parse_instruction(i) for i in C] # program store
+
+        self.labels = {}
+        self.C = [parse_instruction(i, idx, self.labels) for idx, i in enumerate(C)] # program store
         self.maxC = len(C) - 1 # max memory address in program store
         self.PC = 0 # program counter
         self.S = [0 for __ in range(memory_size)] # main memory
@@ -101,6 +120,10 @@ class VM:
     def _read(self, idx):
         # TODO: boundary check
         return self.S[idx]
+
+    def _jump(self, a):
+        # TODO: boundary check
+        self.PC = a
 
     def _read_sp_rel(self, rel_idx=0):
         return self._read(self.SP + rel_idx)
@@ -131,8 +154,8 @@ class VM:
         
         # TODO: boundary check
         IR = self.C[self.PC]
-        IR.execute(self)
         self.PC += 1
+        IR.execute(self)
     
     @op()
     def op_halt(self):
@@ -153,6 +176,17 @@ class VM:
         w = self._read_sp_rel(-1)
         a = self._read_sp_rel(0)
         self._write(w, a)
+        self._dec_sp()
+
+    @op(address)
+    def op_jump(self, a):
+        self._jump(a)
+
+    @op(address)
+    def op_jumpz(self, a):
+        b = self._read_sp_rel(0)
+        if not b:
+            self._jump(a)
         self._dec_sp()
 
     @op(constant)

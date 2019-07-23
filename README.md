@@ -33,8 +33,8 @@ Instructions:
 - [x] geq
 - [x] gr
 - [ ] halt
-- [ ] jump
-- [ ] jumpz
+- [x] jump
+- [x] jumpz
 - [ ] jumpi
 - [x] leq
 - [x] le
