@@ -51,7 +51,7 @@ Instructions:
 - [x] not
 - [ ] new
 - [x] or
-- [ ] pop
+- [x] pop
 - [ ] return
 - [ ] slide
 - [x] store

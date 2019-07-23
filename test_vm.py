@@ -11,6 +11,7 @@ def _test_binary_op(op_name, x, y, z):
     vm = VM(instructions)
     for _ in range(len(instructions)):
         vm.step()
+    assert vm._get_sp() == 1
     assert vm.peek() == z
 
 
@@ -23,6 +24,7 @@ def _test_unary_op(op_name, x, z):
     vm = VM(instructions)
     for _ in range(len(instructions)):
         vm.step()
+    assert vm._get_sp() == 1
     assert vm.peek() == z
 
 
@@ -157,10 +159,40 @@ def test_storea_and_loada():
     b_val, c_val = 7, 13
 
     vm = VM(instructions)
+    assert vm._get_sp() == 0
     vm._write(b_val, b_ref)
     vm._write(c_val, c_ref)
     for _ in range(len(instructions)):
         vm.step()
+    assert vm._get_sp() == 0
     a_val = vm._read(a_ref)
     assert a_val == b_val + b_val * c_val
 
+
+def test_loadc():
+    c = 42
+    instructions = [
+        'loadc %d' % c
+    ]
+    # TODO: add additional state checks
+
+    vm = VM(instructions)
+    assert vm._get_sp() == 0
+    for _ in range(len(instructions)):
+        vm.step()
+    assert vm._get_sp() == 1
+    assert vm.peek() == c
+
+
+def test_pop():
+    instructions = [
+        'loadc 42',
+        'pop'
+    ]
+    # TODO: add additional state checks
+
+    vm = VM(instructions)
+    assert vm._get_sp() == 0
+    for _ in range(len(instructions)):
+        vm.step()
+    assert vm._get_sp() == 0

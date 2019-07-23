@@ -117,6 +117,9 @@ class VM:
         self._inc_sp()
         self._write_sp_rel(value)
 
+    def _get_sp(self):
+        return self.SP
+
     def peek(self):
         """ Return the value on top of the stack. """
         # TODO: boundary check
@@ -134,6 +137,10 @@ class VM:
     @op()
     def op_halt(self):
         self.halted = True
+
+    @op()
+    def op_pop(self):
+        self._dec_sp()
 
     @op()
     def op_load(self):
@@ -222,11 +229,3 @@ class VM:
     @unary_int_op
     def op_not(x):
         return not bool(x)
-
-    
-
-vm = VM(['loadc 1', 'loadc 1', 'eq', 'halt'])
-vm.step()
-vm.step()
-vm.step()
-vm.step()
