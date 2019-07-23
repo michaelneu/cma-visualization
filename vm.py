@@ -24,21 +24,21 @@ def op(*type_casters):
 def unary_int_op(func):
     @op()
     def unary_op(self):
-        x = self._read(0)
+        x = self._read_sp_rel(0)
         result = int(func(x))
         self.logger.debug(f" <- {result} ({op_func_name(func)} {x})")
-        self._write(result, 0)
+        self._write_sp_rel(result, 0)
     return unary_op
 
 
 def binary_int_op(func):
     @op()
     def binary_op(self):
-        x, y = self._read(-1), self._read(0)
+        x, y = self._read_sp_rel(-1), self._read_sp_rel(0)
         result = int(func(x, y))
         self.logger.debug(f" <- {result} ({op_func_name(func)} {x} {y})")
-        self._write(result, -1)
-        self._dec()
+        self._write_sp_rel(result, -1)
+        self._dec_sp()
     return binary_op
 
 
@@ -90,26 +90,32 @@ class VM:
         self.SP = 0 # stack pointer
         self.halted = False
     
-    def _inc(self):
+    def _inc_sp(self):
         # TODO: boundary check
         self.SP += 1
     
-    def _dec(self):
+    def _dec_sp(self):
         # TODO: boundary check
         self.SP -= 1
-    
-    def _read(self, rel_idx=0):
+
+    def _read(self, idx):
         # TODO: boundary check
-        return self.S[self.SP+rel_idx]
-    
-    def _write(self, value, rel_idx=0):
+        return self.S[idx]
+
+    def _read_sp_rel(self, rel_idx=0):
+        return self._read(self.SP + rel_idx)
+
+    def _write(self, value, idx):
         # TODO: value type check
         # TODO: boundary check
-        self.S[self.SP+rel_idx] = value
+        self.S[idx] = value
+
+    def _write_sp_rel(self, value, rel_idx=0):
+        self._write(value, self.SP + rel_idx)
 
     def _push_S(self, value):
-        self._inc()
-        self._write(value)
+        self._inc_sp()
+        self._write_sp_rel(value)
 
     def peek(self):
         """ Return the value on top of the stack. """
@@ -128,7 +134,31 @@ class VM:
     @op()
     def op_halt(self):
         self.halted = True
-    
+
+    @op()
+    def op_load(self):
+        a = self._read_sp_rel(0)
+        w = self._read(a)
+        self._write_sp_rel(w)
+
+    @op()
+    def op_store(self):
+        w = self._read_sp_rel(-1)
+        a = self._read_sp_rel(0)
+        self._write(w, a)
+        self._dec_sp()
+
+    @op(constant)
+    def op_loada(self, a):
+        w = self._read(a)
+        self._push_S(w)
+
+    @op(constant)
+    def op_storea(self, a):
+        w = self._read_sp_rel(0)
+        self._write(w, a)
+        self._dec_sp()
+
     @op(constant)
     def op_loadc(self, q):
         self._push_S(q)

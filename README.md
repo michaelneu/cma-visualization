@@ -38,9 +38,9 @@ Instructions:
 - [ ] jumpi
 - [x] leq
 - [x] le
-- [ ] load
-- [ ] loada
-- [ ] loadc
+- [x] load
+- [x] loada
+- [x] loadc
 - [ ] loadr
 - [ ] loadrc
 - [ ] malloc
@@ -54,7 +54,7 @@ Instructions:
 - [ ] pop
 - [ ] return
 - [ ] slide
-- [ ] store
-- [ ] storea
+- [x] store
+- [x] storea
 - [ ] storer
 - [x] sub

@@ -109,3 +109,58 @@ def test_instruction_neg():
 def test_instruction_not():
     _test_unary_op('not', 0, 1)
     _test_unary_op('not', 1, 0)
+
+
+def test_store_and_load():
+    # a <- (b + (b * c)) with {&a = 5, &b = 6, &c = 7}
+    a_ref, b_ref, c_ref = 5, 6, 7
+
+    instructions = [
+        'loadc %d' % b_ref,
+        'load',
+        'loadc %d' % b_ref,
+        'load',
+        'loadc %d' % c_ref,
+        'load',
+        'mul',
+        'add',
+        'loadc %d' % a_ref,
+        'store'
+    ]
+    # TODO: add additional state checks
+
+    b_val, c_val = 7, 13
+
+    vm = VM(instructions)
+    vm._write(b_val, b_ref)
+    vm._write(c_val, c_ref)
+    for _ in range(len(instructions)):
+        vm.step()
+    a_val = vm._read(a_ref)
+    assert a_val == b_val + b_val * c_val
+
+
+def test_storea_and_loada():
+    # a <- (b + (b * c)) with {&a = 5, &b = 6, &c = 7}
+    a_ref, b_ref, c_ref = 5, 6, 7
+
+    instructions = [
+        'loada %d' % b_ref,
+        'loada %d' % b_ref,
+        'loada %d' % c_ref,
+        'mul',
+        'add',
+        'storea %d' % a_ref
+    ]
+    # TODO: add additional state checks
+
+    b_val, c_val = 7, 13
+
+    vm = VM(instructions)
+    vm._write(b_val, b_ref)
+    vm._write(c_val, c_ref)
+    for _ in range(len(instructions)):
+        vm.step()
+    a_val = vm._read(a_ref)
+    assert a_val == b_val + b_val * c_val
+
