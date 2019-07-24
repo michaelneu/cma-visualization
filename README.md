@@ -49,7 +49,7 @@ Instructions:
 - [x] neg
 - [x] neq
 - [x] not
-- [ ] new
+- [x] new
 - [x] or
 - [x] pop
 - [ ] return

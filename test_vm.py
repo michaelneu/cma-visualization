@@ -299,3 +299,27 @@ def test_store_and_load_m():
     assert a == b_val + b_val * c_val
     assert b == b_val + b_val * c_val
     assert c == b_val + b_val * c_val
+
+
+def test_new():
+    instructions = [
+        'loadc 5',
+        'new',
+        'loadc 10',
+        'new',
+        'loadc 1',
+        'new'
+    ]
+    vm = VM(instructions)
+    for _ in range(len(instructions)):
+        vm.step()
+    a_ref = vm.peek(-2)
+    b_ref = vm.peek(-1)
+    c_ref = vm.peek(0)
+
+    assert a_ref > vm.EP
+    assert b_ref > vm.EP
+    assert c_ref > vm.EP
+    assert vm.maxS - a_ref == 5
+    assert a_ref - b_ref == 10
+    assert b_ref - c_ref == 1

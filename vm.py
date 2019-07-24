@@ -111,6 +111,8 @@ class VM:
         self.S = [0 for __ in range(memory_size)] # main memory
         self.maxS = memory_size-1 # max memory address in main memory
         self.SP = 0 # stack pointer
+        self.EP = memory_size // 4
+        self.HP = self.maxS
         self.halted = False
 
     def _set_sp_rel(self, rel_idx):
@@ -152,10 +154,10 @@ class VM:
     def _get_sp(self):
         return self.SP
 
-    def peek(self):
+    def peek(self, rel_idx=0):
         """ Return the value on top of the stack. """
         # TODO: boundary check
-        return self.S[self.SP]
+        return self.S[self.SP+rel_idx]
 
     def step(self, force=False):
         if self.halted and not force:
@@ -229,6 +231,15 @@ class VM:
     @op(constant)
     def op_loadc(self, q):
         self._push_S(q)
+
+    @op()
+    def op_new(self):
+        n = self._read_sp_rel(0)
+        if self.HP - n > self.EP:
+            self.HP = self.HP - n
+            self._write_sp_rel(self.HP, 0)
+        else:
+            self._write_sp_rel(0, 0)
     
     @binary_int_op
     def op_add(x, y):
