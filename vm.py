@@ -108,6 +108,7 @@ class VM:
         self.C = [parse_instruction(i, idx, self.labels) for idx, i in enumerate(C)] # program store
         self.maxC = len(C) - 1 # max memory address in program store
         self.PC = 0 # program counter
+        self.FP = 0
         self.S = [0 for __ in range(memory_size)] # main memory
         self.maxS = memory_size-1 # max memory address in main memory
         self.SP = 0 # stack pointer
@@ -231,6 +232,27 @@ class VM:
     @op(constant)
     def op_loadc(self, q):
         self._push_S(q)
+
+    @op(constant)
+    def op_loadrc(self, j):
+        self._inc_sp()
+        self._write_sp_rel(self.FP + j)
+
+    @op(constant, constant, defaults=[None, 1])
+    def op_loadr(self, j, m):
+        a = self.FP + j
+        for i in range(m):
+            w = self._read(a + i)
+            self._inc_sp()
+            self._write_sp_rel(w)
+
+    @op(constant, constant, defaults=[None, 1])
+    def op_storer(self, j, m):
+        a = self.FP + j
+        for i in range(m):
+            w = self._read_sp_rel(i-m)
+            self._write(w, a + i)
+        self._set_sp_rel(m-1)
 
     @op()
     def op_new(self):

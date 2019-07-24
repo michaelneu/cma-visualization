@@ -41,8 +41,8 @@ Instructions:
 - [x] load
 - [x] loada
 - [x] loadc
-- [ ] loadr
-- [ ] loadrc
+- [x] loadr
+- [x] loadrc
 - [ ] malloc
 - [ ] mark
 - [x] mul
@@ -56,5 +56,5 @@ Instructions:
 - [ ] slide
 - [x] store
 - [x] storea
-- [ ] storer
+- [x] storer
 - [x] sub
