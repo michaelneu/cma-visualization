@@ -252,3 +252,17 @@ def test_jumpi():
     pass
 
 
+def test_dup():
+    # TODO
+    instructions = [
+        'loadc 42',
+        'dup'
+    ]
+    vm = VM(instructions)
+    assert vm._get_sp() == 0
+    for _ in range(len(instructions)):
+        vm.step()
+    assert vm._get_sp() == 2
+    assert vm._read(1) == 42
+    assert vm._read(2) == 42
+    pass

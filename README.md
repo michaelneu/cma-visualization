@@ -27,7 +27,7 @@ Instructions:
 - [ ] alloc
 - [ ] call
 - [x] div
-- [ ] dup
+- [x] dup
 - [ ] enter
 - [x] eq
 - [x] geq

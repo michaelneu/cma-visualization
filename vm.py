@@ -178,6 +178,11 @@ class VM:
         self._write(w, a)
         self._dec_sp()
 
+    @op()
+    def op_dup(self):
+        w = self._read_sp_rel(0)
+        self._push_S(w)
+
     @op(address)
     def op_jump(self, a):
         self._jump(a)
