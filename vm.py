@@ -142,6 +142,7 @@ class VM:
         self.S[idx] = value
 
     def _write_sp_rel(self, value, rel_idx=0):
+        # TODO: boundary check
         self._write(value, self.SP + rel_idx)
 
     def _push_S(self, value):
@@ -169,9 +170,10 @@ class VM:
     def op_halt(self):
         self.halted = True
 
-    @op()
-    def op_pop(self):
-        self._dec_sp()
+    @op(constant, defaults=[1])
+    def op_pop(self, m):
+        # TODO: range check
+        self._set_sp_rel(-m)
 
     @op(constant, defaults=[1])
     def op_load(self, m):
