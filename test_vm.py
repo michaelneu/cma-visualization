@@ -198,7 +198,7 @@ def test_pop():
     assert vm._get_sp() == 0
 
 
-def test_jump_1():
+def test_jump_and_jumpz():
     # if (x > y)
     #  x <- x - y;
     # else
@@ -245,4 +245,10 @@ def test_jump_1():
     x, y = x_val, y_val
     y_val = vm._read(y_ref)
     assert y_val == y - x  # !(4 > 3) => y = y - x
+
+
+def test_jumpi():
+    # TODO
+    pass
+
 

@@ -35,7 +35,7 @@ Instructions:
 - [ ] halt
 - [x] jump
 - [x] jumpz
-- [ ] jumpi
+- [x] jumpi
 - [x] leq
 - [x] le
 - [x] load

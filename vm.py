@@ -183,6 +183,12 @@ class VM:
         self._jump(a)
 
     @op(address)
+    def op_jumpi(self, a):
+        q = self._read_sp_rel(0)
+        self._jump(a + q)
+        self._dec_sp()
+
+    @op(address)
     def op_jumpz(self, a):
         b = self._read_sp_rel(0)
         if not b:
