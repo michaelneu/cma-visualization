@@ -266,3 +266,36 @@ def test_dup():
     assert vm._read(1) == 42
     assert vm._read(2) == 42
     pass
+
+
+def test_store_and_load_m():
+    # a <- (b + (b * c)) with {&a = 5, &b = 6, &c = 7}
+    a_ref, b_ref, c_ref = 5, 6, 7
+
+    instructions = [
+        'loadc %d' % b_ref,
+        'load',
+        'loadc %d' % b_ref,
+        'load 2',
+        'mul',
+        'add',
+        'dup',
+        'dup',
+        'loadc %d' % a_ref,
+        'store 3'
+    ]
+    # TODO: add additional state checks
+
+    b_val, c_val = 7, 13
+
+    vm = VM(instructions)
+    vm._write(b_val, b_ref)
+    vm._write(c_val, c_ref)
+    for _ in range(len(instructions)):
+        vm.step()
+    a = vm._read(a_ref)
+    b = vm._read(b_ref)
+    c = vm._read(c_ref)
+    assert a == b_val + b_val * c_val
+    assert b == b_val + b_val * c_val
+    assert c == b_val + b_val * c_val

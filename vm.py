@@ -1,4 +1,5 @@
 import logging
+import itertools
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -9,13 +10,16 @@ def op_func_name(op_func):
     return op_func.__name__.split(OP_PREFIX, 1).pop().upper()
 
 
-def op(*type_casters):
+def op(*type_casters, **kwargs):
     logger = logging.getLogger()
     def make_op(func):
         #logger.debug("op {} with {} arguments".format(func.__name__, len(type_casters)))
         def call_op(self, *args):
             # TODO: check number of arguments
-            cast_args = [c(self, v) for c,v in zip(type_casters, args)]
+            checked_args = args
+            if 'defaults' in kwargs:
+                checked_args = [d if v is None else v for v, d in itertools.zip_longest(args, kwargs['defaults'])]
+            cast_args = [c(self, v) for c,v in zip(type_casters, checked_args)]
             return func(self, *cast_args)
         return call_op
     return make_op
@@ -108,7 +112,11 @@ class VM:
         self.maxS = memory_size-1 # max memory address in main memory
         self.SP = 0 # stack pointer
         self.halted = False
-    
+
+    def _set_sp_rel(self, rel_idx):
+        # TODO: boundary check
+        self.SP += rel_idx
+
     def _inc_sp(self):
         # TODO: boundary check
         self.SP += 1
@@ -165,18 +173,23 @@ class VM:
     def op_pop(self):
         self._dec_sp()
 
-    @op()
-    def op_load(self):
+    @op(constant, defaults=[1])
+    def op_load(self, m):
         a = self._read_sp_rel(0)
-        w = self._read(a)
-        self._write_sp_rel(w)
 
-    @op()
-    def op_store(self):
-        w = self._read_sp_rel(-1)
+        for i in range(m):
+            w = self._read(a+i)
+            if i > 0:
+                self._inc_sp()
+            self._write_sp_rel(w)
+
+    @op(constant, defaults=[1])
+    def op_store(self, m):
         a = self._read_sp_rel(0)
-        self._write(w, a)
-        self._dec_sp()
+        for i in range(m):
+            w = self._read_sp_rel(i-m)
+            self._write(w, a + i)
+        self._set_sp_rel(m-1)
 
     @op()
     def op_dup(self):
