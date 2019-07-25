@@ -70,17 +70,17 @@ class instruction:
     def __init__(self, name, args):
         self.name = name
         self.args = args
-    
+
     def execute(self, vm):
         # TODO: make sure instruction exists
         vm.logger.debug(self.name.upper())
         getattr(vm, OP_PREFIX + self.name)(*self.args)
 
-        
+
 def parse_instruction(args, idx, labels):
     if isinstance(args, instruction):
         return args
-    
+
     if isinstance(args, str):
         args = args.split(' ')
 
@@ -123,7 +123,7 @@ class VM:
     def _inc_sp(self):
         # TODO: boundary check
         self.SP += 1
-    
+
     def _dec_sp(self):
         # TODO: boundary check
         self.SP -= 1
@@ -163,12 +163,12 @@ class VM:
     def step(self, force=False):
         if self.halted and not force:
             return
-        
+
         # TODO: boundary check
         IR = self.C[self.PC]
         self.PC += 1
         IR.execute(self)
-    
+
     @op()
     def op_halt(self):
         self.halted = True
@@ -316,51 +316,51 @@ class VM:
     @binary_int_op
     def op_add(x, y):
         return x + y
-    
+
     @binary_int_op
     def op_sub(x, y):
         return x - y
-    
+
     @binary_int_op
     def op_mul(x, y):
         return x * y
-    
+
     @binary_int_op
     def op_div(x, y):
         return x // y
-    
+
     @binary_int_op
     def op_mod(x, y):
         return x % y
-    
+
     @binary_bool_op
     def op_and(x, y):
         return x and y
-    
+
     @binary_bool_op
     def op_or(x, y):
         return x or y
-    
+
     @binary_int_op
     def op_eq(x, y):
         return x == y
-    
+
     @binary_int_op
     def op_neq(x, y):
         return x != y
-    
+
     @binary_int_op
     def op_le(x, y):
         return x < y
-    
+
     @binary_int_op
     def op_leq(x, y):
         return x <= y
-    
+
     @binary_int_op
     def op_gr(x, y):
         return x > y
-    
+
     @binary_int_op
     def op_geq(x, y):
         return x >= y
