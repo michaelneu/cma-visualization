@@ -313,10 +313,6 @@ class VM:
         self.SP = self.FP - q
         self.FP = self._read(self.FP-1)
 
-    @op()
-    def op_halt(self):
-        raise Exception("Halted")
-
     @binary_int_op
     def op_add(x, y):
         return x + y
