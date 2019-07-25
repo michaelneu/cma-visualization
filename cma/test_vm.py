@@ -1,4 +1,4 @@
-from vm import VM
+from .vm import VM
 
 
 def _test_binary_op(op_name, x, y, z):
