@@ -110,7 +110,7 @@ class VM:
         self.maxC = len(C) - 1 # max memory address in program store
         self.PC = 0 # program counter
         self.FP = 0
-        self.S = [0 for __ in range(memory_size)] # main memory
+        self.S = [None for __ in range(memory_size)] # main memory
         self.maxS = memory_size-1 # max memory address in main memory
         self.SP = 0 # stack pointer
         self.EP = memory_size // 4
