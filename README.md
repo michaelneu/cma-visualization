@@ -24,15 +24,15 @@ Notebooks created on the Jupyter instance are stored in the `notebooks` folder i
 Instructions:
 - [x] add
 - [x] and
-- [ ] alloc
-- [ ] call
+- [x] alloc
+- [x] call
 - [x] div
 - [x] dup
-- [ ] enter
+- [x] enter
 - [x] eq
 - [x] geq
 - [x] gr
-- [ ] halt
+- [x] halt
 - [x] jump
 - [x] jumpz
 - [x] jumpi
@@ -43,8 +43,7 @@ Instructions:
 - [x] loadc
 - [x] loadr
 - [x] loadrc
-- [ ] malloc
-- [ ] mark
+- [x] mark
 - [x] mul
 - [x] neg
 - [x] neq
@@ -52,8 +51,8 @@ Instructions:
 - [x] new
 - [x] or
 - [x] pop
-- [ ] return
-- [ ] slide
+- [x] return
+- [x] slide
 - [x] store
 - [x] storea
 - [x] storer

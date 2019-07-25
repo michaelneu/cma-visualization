@@ -262,7 +262,61 @@ class VM:
             self._write_sp_rel(self.HP, 0)
         else:
             self._write_sp_rel(0, 0)
-    
+
+    @op()
+    def op_mark(self):
+        # TODO: boundary checks
+        self._write_sp_rel(self.EP, 1)
+        self._write_sp_rel(self.FP, 2)
+        self._set_sp_rel(2)
+
+    @op()
+    def op_call(self):
+        # TODO: boundary checks
+        self.FP = self.SP
+        tmp = self.PC
+        self.PC = self._read_sp_rel(0)
+        self._write_sp_rel(tmp, 0)
+
+    @op(constant)
+    def op_enter(self, m):
+        assert m >= 0
+        self.EP = self.SP + m
+        if self.EP >= self.HP:
+            raise Exception("Stack Overflow")
+
+    @op(constant)
+    def op_alloc(self, m):
+        assert m >= 0
+        self.SP = self.SP + m
+
+    @op(constant, constant)
+    def op_slide(self, q, m):
+        assert q >= 0
+        assert m >= 0
+        if q > 0:
+            if m == 0:
+                self.SP = self.SP - q
+            else:
+                self.SP = self.SP - q - m
+                for i in range(m):
+                    self._inc_sp()
+                    self._write_sp_rel(self._read_sp_rel(q), 0)
+
+    @op(constant)
+    def op_return(self, q):
+        assert q >= 0
+        self.PC = self._read(self.FP)
+        self.EP = self._read(self.FP-2)
+        if self.EP >= self.HP:
+            raise Exception("Stack Overflow")
+        self.SP = self.FP - q
+        self.FP = self._read(self.FP-1)
+
+    @op()
+    def op_halt(self):
+        raise Exception("Halted")
+
     @binary_int_op
     def op_add(x, y):
         return x + y
