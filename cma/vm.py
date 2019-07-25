@@ -1,3 +1,4 @@
+from .visualization import render_vm_state_to_html
 import logging
 import itertools
 logging.basicConfig()
@@ -372,3 +373,6 @@ class VM:
     @unary_int_op
     def op_not(x):
         return not bool(x)
+
+    def _repr_html_(self):
+        return render_vm_state_to_html(self)
