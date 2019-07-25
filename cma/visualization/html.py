@@ -50,13 +50,14 @@ def generate_program_tab_pane_html(program, program_counter):
         >{indented_code}</div>
     """)
 
-def generate_cell_html(cell, _rendered_index):
+def generate_cell_html(cell, _rendered_index, memory_index):
     value, pointers = get_cell_pointers(cell)
     value_or_empty_string = value if value != None else ""
     pointer_list = ", ".join(pointers)
 
     return f"""
         <tr class="cell">
+            <td>{memory_index}</td>
             <td class="value" style="border: 1px solid #333; text-align: center">{value_or_empty_string}</td>
             <td>{pointer_list}</td>
         </tr>
@@ -65,6 +66,7 @@ def generate_cell_html(cell, _rendered_index):
 def generate_dots_html(_rendered_index):
     return """
         <tr class="dots">
+            <td></td>
             <td style="border: 1px solid #333;">...</td>
         </tr>
     """

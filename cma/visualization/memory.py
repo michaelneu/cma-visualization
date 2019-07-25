@@ -26,7 +26,7 @@ def generate_memory_with_pointers(pointed_memory, render_cell, render_dots):
     rendered_dots = False
     rendered_index = 0
 
-    for cell in pointed_memory:
+    for memory_index, cell in enumerate(pointed_memory):
         if cell == None and not rendered_dots:
             rendered_dots = True
             skipped_cells.append(
@@ -36,7 +36,7 @@ def generate_memory_with_pointers(pointed_memory, render_cell, render_dots):
         elif cell != None:
             rendered_dots = False
             skipped_cells.append(
-                render_cell(cell, rendered_index)
+                render_cell(cell, rendered_index, memory_index)
             )
             rendered_index += 1
 

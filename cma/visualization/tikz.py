@@ -1,6 +1,6 @@
 from .memory import generate_memory_with_pointers, get_cell_pointers
 
-def generate_cell_tikz(cell, rendered_index):
+def generate_cell_tikz(cell, rendered_index, memory_index):
     value, pointers = get_cell_pointers(cell)
     value_or_empty_string = str(value) if value != None else ""
 
@@ -9,9 +9,11 @@ def generate_cell_tikz(cell, rendered_index):
     else:
         tikz = r"\node[draw, minimum width=1cm, minimum height=0.5cm, above=0cm of node_%d] (node_%d) {%s};" % (rendered_index - 1, rendered_index, value_or_empty_string)
 
+    tikz += r"\node[left=0cm of node_%d, anchor=east, color=black!40] {\small %d};" % (rendered_index, memory_index)
+
     if len(pointers) > 0:
         pointer_list = ", ".join(pointers)
-        tikz += r"\node[right=0.5cm of node_%d] {%s};" % (rendered_index, pointer_list)
+        tikz += r"\node[right=0.5cm of node_%d, anchor=west] {%s};" % (rendered_index, pointer_list)
 
     return tikz
 
