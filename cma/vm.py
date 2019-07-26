@@ -1,8 +1,6 @@
 from .visualization import render_vm_state_to_html
 import logging
 import itertools
-logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
 
 OP_PREFIX = "op_"
 
