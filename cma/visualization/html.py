@@ -16,7 +16,7 @@ def generate_copyable_tab_pane_html(title, body):
         >{body}</textarea>
     """)
 
-def generate_program_line_with_number(instruction, line_number, active=False):
+def generate_program_line_with_number(instruction, line_number, active=False, labels={}):
     line_number_color = "#aaa"
     code_color = "black"
 
@@ -34,11 +34,19 @@ def generate_program_line_with_number(instruction, line_number, active=False):
         </div>
     """ % (line_number)
 
+    for label, label_line_number in labels.items():
+        if label_line_number == line_number:
+            html = f"""
+                <div class="instruction-label">
+                    <pre style="color: purple;">        {label}:</pre>
+                </div>
+            """ + html
+
     return html
 
-def generate_program_tab_pane_html(program, program_counter):
+def generate_program_tab_pane_html(program, program_counter, labels):
     indented_code = "\n".join([
-        generate_program_line_with_number(instruction, line_number, line_number == program_counter)
+        generate_program_line_with_number(instruction, line_number, line_number == program_counter, labels)
         for line_number, instruction
         in enumerate(program)
     ])

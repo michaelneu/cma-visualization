@@ -3,7 +3,7 @@ from .tikz import generate_tikz_document, generate_memory_with_pointers_tikz
 from .memory import point_to_cells
 
 def render_vm_state_to_html(vm):
-    code_html = generate_program_tab_pane_html(vm.C, vm.PC)
+    code_html = generate_program_tab_pane_html(vm.C, vm.PC, vm.labels)
     pointed_memory = point_to_cells(vm.S, {
         "SP": vm.SP,
         "EP": vm.EP,
