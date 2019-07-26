@@ -168,6 +168,8 @@ class VM:
         self.PC += 1
         IR.execute(self)
 
+        return self
+
     @op()
     def op_halt(self):
         self.halted = True
