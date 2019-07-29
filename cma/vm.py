@@ -109,7 +109,6 @@ class VM:
             flatten = lambda l: [item for sublist in l for item in sublist]
             C = list(filter(lambda x: len(x) > 0,
                             flatten([[x.strip() for x in l.split(';')] for l in C.split('\n')])))
-            print (C)
 
         self.labels = {}
         self.C = [parse_instruction(i, idx, self.labels) for idx, i in enumerate(C)] # program store
@@ -238,7 +237,7 @@ class VM:
         self._write(w, a)
         self._dec_sp()
 
-    @op(constant)
+    @op(address)
     def op_loadc(self, q):
         self._push_S(q)
 
