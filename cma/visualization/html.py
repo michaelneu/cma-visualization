@@ -118,6 +118,7 @@ def generate_html_document(*items):
     return """<!doctype html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>CMa Visualization</title>
         <style type="text/css">
             body {
