@@ -1,6 +1,7 @@
 from .visualization import render_vm_state_to_html
 import logging
 import itertools
+import re
 
 OP_PREFIX = "op_"
 
@@ -81,7 +82,7 @@ def parse_instruction(args, idx, labels):
         return args
 
     if isinstance(args, str):
-        args = args.split(' ')
+        args = args.strip().split(' ')
 
     args = [arg.lower() for arg in args]
     # TODO: boundary check (min 1 element in args)
@@ -102,6 +103,13 @@ def parse_instruction(args, idx, labels):
 class VM:
     def __init__(self, C, memory_size=1024):
         self.logger = logging.getLogger()
+
+        if isinstance(C, str):
+            C = re.sub(r':\s*(?=\S)', ': ', C)
+            flatten = lambda l: [item for sublist in l for item in sublist]
+            C = list(filter(lambda x: len(x) > 0,
+                            flatten([[x.strip() for x in l.split(';')] for l in C.split('\n')])))
+            print (C)
 
         self.labels = {}
         self.C = [parse_instruction(i, idx, self.labels) for idx, i in enumerate(C)] # program store
