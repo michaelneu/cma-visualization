@@ -8,6 +8,7 @@ def render_vm_state_to_html(vm):
         "SP": vm.SP,
         "EP": vm.EP,
         "HP": vm.HP,
+        "FP": vm.FP,
     })
 
     memory_html = generate_memory_with_pointers_html(pointed_memory)
