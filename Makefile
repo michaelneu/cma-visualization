@@ -7,4 +7,4 @@ clean:
 	docker rmi cma_notebook
 
 run:
-	docker run --rm -it -v `pwd`/notebooks:/home/jovyan/notebooks -p 8888:8888 cma_notebook
+	docker run --rm -it -v "${PWD}/notebooks:/home/jovyan/notebooks" -p 8888:8888 cma_notebook
