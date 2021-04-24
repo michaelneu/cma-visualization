@@ -152,7 +152,8 @@ def test_storea_and_loada():
         'loada %d' % c_ref,
         'mul',
         'add',
-        'storea %d' % a_ref
+        'storea %d' % a_ref,
+        'pop'
     ]
     # TODO: add additional state checks
 
