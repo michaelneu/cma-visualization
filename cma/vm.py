@@ -1,4 +1,4 @@
-from visualization import render_vm_state_to_html
+from .visualization import render_vm_state_to_html
 import logging
 import itertools
 import re
