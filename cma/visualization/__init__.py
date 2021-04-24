@@ -11,7 +11,9 @@ def render_vm_state_to_html(vm):
         "FP": vm.FP,
     })
 
-    memory_html = generate_memory_with_pointers_html(pointed_memory)
+    # start at -1: always include the black block representing the end of stack
+    memory_html = generate_memory_with_pointers_html(pointed_memory, -1)
+    memory_tikz = generate_memory_with_pointers_tikz(pointed_memory, -1)
 
     return generate_row_html(
         generate_column_html(
@@ -40,9 +42,7 @@ def render_vm_state_to_html(vm):
                     50,
                     generate_copyable_tab_pane_html(
                         "LaTeX/Tikz",
-                        generate_tikz_document(
-                            generate_memory_with_pointers_tikz(pointed_memory),
-                        )
+                        generate_tikz_document(memory_tikz)
                     ),
                 ),
             ),

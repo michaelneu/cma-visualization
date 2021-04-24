@@ -1,4 +1,4 @@
-from .visualization import render_vm_state_to_html
+from visualization import render_vm_state_to_html
 import logging
 import itertools
 import re
@@ -114,12 +114,12 @@ class VM:
         self.C = [parse_instruction(i, idx, self.labels) for idx, i in enumerate(C)] # program store
         self.maxC = len(C) - 1 # max memory address in program store
         self.PC = 0 # program counter
-        self.FP = 0
+        self.FP = -1
         self.S = [None for __ in range(memory_size)] # main memory
         self.maxS = memory_size-1 # max memory address in main memory
-        self.SP = 0 # stack pointer
+        self.SP = -1 # stack pointer
         self.EP = memory_size // 4
-        self.HP = self.maxS
+        self.HP = self.maxS + 1
         self.halted = False
 
     def _set_sp_rel(self, rel_idx):

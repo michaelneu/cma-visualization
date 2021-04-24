@@ -11,7 +11,7 @@ def _test_binary_op(op_name, x, y, z):
     vm = VM(instructions)
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 1
+    assert vm._get_sp() == 0
     assert vm.peek() == z
 
 
@@ -24,7 +24,7 @@ def _test_unary_op(op_name, x, z):
     vm = VM(instructions)
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 1
+    assert vm._get_sp() == 0
     assert vm.peek() == z
 
 
@@ -160,12 +160,12 @@ def test_storea_and_loada():
     b_val, c_val = 7, 13
 
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     vm._write(b_val, b_ref)
     vm._write(c_val, c_ref)
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     a_val = vm._read(a_ref)
     assert a_val == b_val + b_val * c_val
 
@@ -178,10 +178,10 @@ def test_loadc():
     # TODO: add additional state checks
 
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 1
+    assert vm._get_sp() == 0
     assert vm.peek() == c
 
 
@@ -193,10 +193,10 @@ def test_pop():
     # TODO: add additional state checks
 
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
 
 
 def test_jump_and_jumpz():
@@ -227,7 +227,7 @@ def test_jump_and_jumpz():
 
     x_val, y_val = 4, 3
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     vm._write(x_val, x_ref)
     vm._write(y_val, y_ref)
     while not vm.halted:
@@ -238,7 +238,7 @@ def test_jump_and_jumpz():
 
     x_val, y_val = 3, 4
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     vm._write(x_val, x_ref)
     vm._write(y_val, y_ref)
     while not vm.halted:
@@ -260,12 +260,12 @@ def test_dup():
         'dup'
     ]
     vm = VM(instructions)
-    assert vm._get_sp() == 0
+    assert vm._get_sp() == -1
     for _ in range(len(instructions)):
         vm.step()
-    assert vm._get_sp() == 2
+    assert vm._get_sp() == 1
+    assert vm._read(0) == 42
     assert vm._read(1) == 42
-    assert vm._read(2) == 42
     pass
 
 
@@ -321,6 +321,6 @@ def test_new():
     assert a_ref > vm.EP
     assert b_ref > vm.EP
     assert c_ref > vm.EP
-    assert vm.maxS - a_ref == 5
+    assert (vm.maxS+1) - a_ref == 5
     assert a_ref - b_ref == 10
     assert b_ref - c_ref == 1
