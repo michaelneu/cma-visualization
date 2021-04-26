@@ -9,11 +9,11 @@ def render_vm_state_to_html(vm):
         "EP": vm.EP,
         "HP": vm.HP,
         "FP": vm.FP,
-    })
+    }, 1) #address 0 is unused
 
-    # start at -1: always include the black block representing the end of stack
-    memory_html = generate_memory_with_pointers_html(pointed_memory, -1)
-    memory_tikz = generate_memory_with_pointers_tikz(pointed_memory, -1)
+    # start at 0: always include the black block representing the end of stack
+    memory_html = generate_memory_with_pointers_html(pointed_memory, 0)
+    memory_tikz = generate_memory_with_pointers_tikz(pointed_memory, 0)
 
     return generate_row_html(
         generate_column_html(

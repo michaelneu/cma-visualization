@@ -6,8 +6,10 @@ class PointedCell:
 class OOBCell:
     pass
 
-def point_to_cells(memory, pointers):
-    pointed_memory = {location: memory[location] for location in range(len(memory))}
+def point_to_cells(memory, pointers, min_addr = 0, max_addr = None):
+    if max_addr == None:
+        max_addr = len(memory)
+    pointed_memory = {location: memory[location] for location in range(min_addr, max_addr)}
 
     for pointer, location in pointers.items():
         # get instead of [] to have PointedCells with value==OOBCell instead of KeyErrors for out-of-bounds pointers
