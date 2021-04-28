@@ -119,7 +119,7 @@ class VM:
         self.maxS = memory_size-1 # max memory address in main memory
         self.SP = 0 # stack pointer
         self.EP = memory_size // 4
-        self.HP = self.maxS
+        self.HP = self.maxS + 1
         self.halted = False
 
     def _set_sp_rel(self, rel_idx):
@@ -202,7 +202,7 @@ class VM:
         for i in range(m):
             w = self._read_sp_rel(i-m)
             self._write(w, a + i)
-        self._set_sp_rel(m-1)
+        self._dec_sp()
 
     @op()
     def op_dup(self):
@@ -235,7 +235,6 @@ class VM:
     def op_storea(self, a):
         w = self._read_sp_rel(0)
         self._write(w, a)
-        self._dec_sp()
 
     @op(address)
     def op_loadc(self, q):

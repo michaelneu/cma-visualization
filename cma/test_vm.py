@@ -152,7 +152,8 @@ def test_storea_and_loada():
         'loada %d' % c_ref,
         'mul',
         'add',
-        'storea %d' % a_ref
+        'storea %d' % a_ref,
+        'pop'
     ]
     # TODO: add additional state checks
 
@@ -320,6 +321,6 @@ def test_new():
     assert a_ref > vm.EP
     assert b_ref > vm.EP
     assert c_ref > vm.EP
-    assert vm.maxS - a_ref == 5
+    assert (vm.maxS+1) - a_ref == 5
     assert a_ref - b_ref == 10
     assert b_ref - c_ref == 1

@@ -1,4 +1,4 @@
-from .memory import generate_memory_with_pointers, get_cell_pointers
+from .memory import generate_memory_with_pointers, get_cell_pointers, is_cell_oob
 
 def generate_tab_pane_html(title, body):
     return f"""
@@ -60,21 +60,23 @@ def generate_program_tab_pane_html(program, program_counter, labels):
 
 def generate_cell_html(cell, _rendered_index, memory_index):
     value, pointers = get_cell_pointers(cell)
+    pointer_list = ", ".join(pointers)
 
-    if memory_index == 0 and value == None:
+    memory_index_string = memory_index if len(pointers)>0 or not is_cell_oob(value) else ""
+    if is_cell_oob(value):
         return f"""
             <tr class="cell">
-                <td></td>
+                <td>{memory_index_string}</td>
                 <td class="value" style="border: 1px solid #333; background-color: black;">&nbsp;</td>
+                <td>{pointer_list}</td>
             </tr>
         """
 
-    value_or_empty_string = value if value != None else ""
-    pointer_list = ", ".join(pointers)
+    value_or_empty_string = str(value) if value != None else ""
 
     return f"""
         <tr class="cell">
-            <td>{memory_index}</td>
+            <td>{memory_index_string}</td>
             <td class="value" style="border: 1px solid #333; text-align: center;">{value_or_empty_string}</td>
             <td>{pointer_list}</td>
         </tr>
@@ -88,8 +90,8 @@ def generate_dots_html(_rendered_index):
         </tr>
     """
 
-def generate_memory_with_pointers_html(pointed_memory):
-    cells = generate_memory_with_pointers(pointed_memory, generate_cell_html, generate_dots_html)
+def generate_memory_with_pointers_html(pointed_memory, min_addr = None, max_addr = None):
+    cells = generate_memory_with_pointers(pointed_memory, generate_cell_html, generate_dots_html, min_addr, max_addr)
     reversed_cells = reversed(cells)
     rendered_cells = "\n".join(reversed_cells)
     return f"""
